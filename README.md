@@ -24,4 +24,7 @@ Simple application for visualising sorting algorithms built with Python and Pyga
 |---|
 ![](gifs/play_pause.gif)
 
-
+### Usage
+- clone GitHub repository<br/>
+- Install: ``pip install pygame``<br/>
+- Run: ``python visualizer.py``
