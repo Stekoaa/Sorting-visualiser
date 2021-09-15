@@ -38,21 +38,157 @@ class BubbleSort(Algorithm):
             end = last_swap
 
 
-class SelectionSort(Algorithm):
+class CoctailSort(Algorithm):
     def __init__(self):
-        super().__init__('Selection Sort')
+        super().__init__('Cocktail Sort')
 
     def algorithm(self):
-        for i in range(len(self.data)):
-            min_idx = i
+        start = 0
+        end = len(self.data) - 1
+        last_left = 0
+        last_right = end
+        swapped = True
 
-            for j in range(i + 1, len(self.data)):
-                if self.data[min_idx] > self.data[j]:
-                    min_idx = j
-                    self.update_display(self.data[min_idx], self.data[i])
+        while swapped:
+            swapped = False
 
-            self.data[min_idx], self.data[i] = self.data[i], self.data[min_idx]
-            self.update_display(self.data[min_idx], self.data[i])
+            for i in range(start, end):
+                if self.data[i] > self.data[i + 1]:
+                    self.data[i], self.data[i + 1] = self.data[i + 1], self.data[i]
+                    self.update_display(self.data[i], self.data[i - 1])
+                    swapped = True
+                    last_left = i
+
+            if not swapped:
+                break
+
+            swapped = False
+            end = last_left
+
+            for i in range(end - 1, start - 1, -1):
+                if self.data[i] > self.data[i + 1]:
+                    self.data[i], self.data[i + 1] = self.data[i + 1], self.data[i]
+                    self.update_display(self.data[i], self.data[i + 1])
+                    swapped = True
+                    last_right = i
+
+            start = last_right
+
+
+class CombSort(Algorithm):
+    def __init__(self):
+        super().__init__('Comb Sort')
+
+    def algorithm(self):
+        gap = len(self.data)
+        swapped = True
+
+        while gap > 1 or swapped:
+            gap = int(gap // 1.3)
+
+            if gap == 0:
+                gap = 1
+
+            swapped = False
+
+            for i in range(0, len(self.data) - gap):
+                if self.data[i] > self.data[i + gap]:
+                    self.data[i], self.data[i + gap] = self.data[i + gap], self.data[i]
+                    swapped = True
+                    self.update_display(self.data[i], self.data[i + gap])
+
+
+class CycleSort(Algorithm):
+    def __init__(self):
+        super().__init__('Cycle Sort')
+
+    def algorithm(self):
+        for cycle_start in range(len(self.data) - 1):
+            item = self.data[cycle_start]
+            pos = cycle_start
+
+            for i in range(cycle_start, len(self.data)):
+                if item > self.data[i]:
+                    pos += 1
+                    self.update_display(item, self.data[i])
+
+            if pos == cycle_start:
+                continue
+
+            while item == self.data[pos]:
+                pos += 1
+                self.update_display(item, self.data[pos])
+
+            self.data[pos], item = item, self.data[pos]
+            self.update_display(item, self.data[pos])
+
+            while pos != cycle_start:
+                pos = cycle_start
+                for i in range(cycle_start + 1, len(self.data)):
+                    if item > self.data[i]:
+                        pos += 1
+                        self.update_display(item, self.data[i])
+
+                while item == self.data[pos]:
+                    pos += 1
+                    self.update_display(item, self.data[pos])
+
+                self.data[pos], item = item, self.data[pos]
+                self.update_display(item, self.data[pos])
+
+
+class GnomeSort(Algorithm):
+    def __init__(self):
+        super().__init__('Gnome Sort')
+
+    def algorithm(self):
+        index = 0
+
+        while index < len(self.data):
+            if index == 0:
+                index += 1
+
+            if self.data[index] < self.data[index - 1]:
+                self.data[index], self.data[index - 1] = self.data[index - 1], self.data[index]
+                self.update_display(self.data[index], self.data[index - 1])
+                index -= 1
+
+            else:
+                index += 1
+
+
+class HeapSort(Algorithm):
+    def __init__(self):
+        super().__init__('Heapsort')
+
+    def algorithm(self):
+        for i in range((len(self.data) - 1) // 2, -1, -1):
+            self.heapify(i, len(self.data))
+
+        size = len(self.data)
+
+        while size > 0:
+            self.data[0], self.data[size - 1] = self.data[size - 1], self.data[0]
+            size -= 1
+            self.heapify(0, size)
+
+    def heapify(self, index, size):
+        temp = self.data[index]
+
+        while index < size//2:
+            largest_index = 2*index + 1
+
+            if largest_index < size-1 and self.data[largest_index] < self.data[largest_index + 1]:
+                largest_index += 1
+
+            if temp >= self.data[largest_index]:
+                break
+
+            self.update_display(self.data[index], self.data[largest_index])
+            self.data[index] = self.data[largest_index]
+            index = largest_index
+
+        self.data[index] = temp
 
 
 class InsertionSort(Algorithm):
@@ -122,64 +258,58 @@ class MergeSort(Algorithm):
             self.update_display()
 
 
-class CombSort(Algorithm):
+class PigeonholeSort(Algorithm):
     def __init__(self):
-        super().__init__('Comb Sort')
+        super().__init__('Pigeonhole Sort')
 
     def algorithm(self):
-        gap = len(self.data)
-        swapped = True
+        my_min = min(self.data)
+        my_max = max(self.data)
 
-        while gap > 1 or swapped:
-            gap = int(gap // 1.3)
+        size = my_max - my_min + 1
+        holes = [0] * size
 
-            if gap == 0:
-                gap = 1
+        for x in self.data:
+            holes[x - my_min] += 1
 
-            swapped = False
+        i = 0
 
-            for i in range(0, len(self.data) - gap):
-                if self.data[i] > self.data[i + gap]:
-                    self.data[i], self.data[i + gap] = self.data[i + gap], self.data[i]
-                    swapped = True
-                    self.update_display(self.data[i], self.data[i + gap])
+        for count in range(size):
+            while holes[count] > 0:
+                holes[count] -= 1
+                self.data[i] = count + my_min
+                self.update_display(self.data[i])
+                i += 1
 
 
-class CoctailSort(Algorithm):
+class QuickSort(Algorithm):
     def __init__(self):
-        super().__init__('Cocktail Sort')
+        super().__init__('Quicksort')
 
-    def algorithm(self):
-        start = 0
-        end = len(self.data) - 1
-        last_left = 0
-        last_right = end
-        swapped = True
+    def algorithm(self, array=None, start=0, end=0):
+        if not array:
+            array = self.data
+            end = len(self.data) - 1
 
-        while swapped:
-            swapped = False
+        if start < end:
+            p = self.partition(array, start, end)
+            self.algorithm(array, start, p - 1)
+            self.algorithm(array, p + 1, end)
 
-            for i in range(start, end):
-                if self.data[i] > self.data[i + 1]:
-                    self.data[i], self.data[i + 1] = self.data[i + 1], self.data[i]
-                    self.update_display(self.data[i], self.data[i - 1])
-                    swapped = True
-                    last_left = i
+    def partition(self, array, start, end):
+        i = start - 1
+        pivot = array[end]
 
-            if not swapped:
-                break
+        for j in range(start, end):
+            if array[j] <= pivot:
+                i += 1
+                array[i], array[j] = array[j], array[i]
+            self.update_display(array[i], array[j])
 
-            swapped = False
-            end = last_left
+        array[i + 1], array[end] = array[end], array[i + 1]
+        self.update_display(array[i + 1], array[end])
 
-            for i in range(end - 1, start - 1, -1):
-                if self.data[i] > self.data[i + 1]:
-                    self.data[i], self.data[i + 1] = self.data[i + 1], self.data[i]
-                    self.update_display(self.data[i], self.data[i + 1])
-                    swapped = True
-                    last_right = i
-
-            start = last_right
+        return i + 1
 
 
 class RadixSort(Algorithm):
@@ -217,34 +347,21 @@ class RadixSort(Algorithm):
             self.update_display(self.data[i])
 
 
-class QuickSort(Algorithm):
+class SelectionSort(Algorithm):
     def __init__(self):
-        super().__init__('Quicksort')
+        super().__init__('Selection Sort')
 
-    def algorithm(self, array=None, start=0, end=0):
-        if not array:
-            array = self.data
-            end = len(self.data) - 1
+    def algorithm(self):
+        for i in range(len(self.data)):
+            min_idx = i
 
-        if start < end:
-            p = self.partition(array, start, end)
-            self.algorithm(array, start, p - 1)
-            self.algorithm(array, p + 1, end)
+            for j in range(i + 1, len(self.data)):
+                if self.data[min_idx] > self.data[j]:
+                    min_idx = j
+                    self.update_display(self.data[min_idx], self.data[i])
 
-    def partition(self, array, start, end):
-        i = start - 1
-        pivot = array[end]
-
-        for j in range(start, end):
-            if array[j] <= pivot:
-                i += 1
-                array[i], array[j] = array[j], array[i]
-            self.update_display(array[i], array[j])
-
-        array[i + 1], array[end] = array[end], array[i + 1]
-        self.update_display(array[i + 1], array[end])
-
-        return i + 1
+            self.data[min_idx], self.data[i] = self.data[i], self.data[min_idx]
+            self.update_display(self.data[min_idx], self.data[i])
 
 
 class ShellSort(Algorithm):
@@ -271,120 +388,3 @@ class ShellSort(Algorithm):
                     self.update_display(self.data[j], temp)
 
                 h = (h - 1) // 3
-
-
-class CycleSort(Algorithm):
-    def __init__(self):
-        super().__init__('Cycle Sort')
-
-    def algorithm(self):
-        for cycle_start in range(len(self.data) - 1):
-            item = self.data[cycle_start]
-            pos = cycle_start
-
-            for i in range(cycle_start, len(self.data)):
-                if item > self.data[i]:
-                    pos += 1
-                    self.update_display(item, self.data[i])
-
-            if pos == cycle_start:
-                continue
-
-            while item == self.data[pos]:
-                pos += 1
-                self.update_display(item, self.data[pos])
-
-            self.data[pos], item = item, self.data[pos]
-            self.update_display(item, self.data[pos])
-
-            while pos != cycle_start:
-                pos = cycle_start
-                for i in range(cycle_start + 1, len(self.data)):
-                    if item > self.data[i]:
-                        pos += 1
-                        self.update_display(item, self.data[i])
-
-                while item == self.data[pos]:
-                    pos += 1
-                    self.update_display(item, self.data[pos])
-
-                self.data[pos], item = item, self.data[pos]
-                self.update_display(item, self.data[pos])
-
-
-class HeapSort(Algorithm):
-    def __init__(self):
-        super().__init__('Heapsort')
-
-    def algorithm(self):
-        for i in range((len(self.data) - 1) // 2, -1, -1):
-            self.heapify(i, len(self.data))
-
-        size = len(self.data)
-
-        while size > 0:
-            self.data[0], self.data[size - 1] = self.data[size - 1], self.data[0]
-            size -= 1
-            self.heapify(0, size)
-
-    def heapify(self, index, size):
-        temp = self.data[index]
-
-        while index < size//2:
-            largest_index = 2*index + 1
-
-            if largest_index < size-1 and self.data[largest_index] < self.data[largest_index + 1]:
-                largest_index += 1
-
-            if temp >= self.data[largest_index]:
-                break
-
-            self.update_display(self.data[index], self.data[largest_index])
-            self.data[index] = self.data[largest_index]
-            index = largest_index
-
-        self.data[index] = temp
-
-
-class PigeonholeSort(Algorithm):
-    def __init__(self):
-        super().__init__('Pigeonhole Sort')
-
-    def algorithm(self):
-        my_min = min(self.data)
-        my_max = max(self.data)
-
-        size = my_max - my_min + 1
-        holes = [0] * size
-
-        for x in self.data:
-            holes[x - my_min] += 1
-
-        i = 0
-
-        for count in range(size):
-            while holes[count] > 0:
-                holes[count] -= 1
-                self.data[i] = count + my_min
-                self.update_display(self.data[i])
-                i += 1
-
-
-class GnomeSort(Algorithm):
-    def __init__(self):
-        super().__init__('Gnome Sort')
-
-    def algorithm(self):
-        index = 0
-
-        while index < len(self.data):
-            if index == 0:
-                index += 1
-
-            if self.data[index] < self.data[index - 1]:
-                self.data[index], self.data[index - 1] = self.data[index - 1], self.data[index]
-                self.update_display(self.data[index], self.data[index - 1])
-                index -= 1
-
-            else:
-                index += 1
