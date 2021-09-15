@@ -1,7 +1,7 @@
 # Sorting-visualiser
 Simple application for visualising sorting algorithms built with Python and Pygame
 
-## Algorithms implemented
+### Algorithms implemented
 - Bubble sort
 - Coctail sort
 - Comb sort
@@ -16,11 +16,12 @@ Simple application for visualising sorting algorithms built with Python and Pyga
 - Selection Sort
 - Shellsort
 
-## Program preview
+### Program preview
 ![](gifs/preview.gif)
 
-## Features
-Pause and Play with SPACE
-![](gifs/play_pasue.gif)
+### Additional feature
+|Pause and Play with \<SPACE\>|
+|---|
+![](gifs/play_pause.gif)
 
 
